@@ -1,15 +1,180 @@
-Source: template-repository
-Section: unknown
+Source: cpdb-libs
 Priority: optional
-Maintainer: Tsic404 <liuheng@deepin.org>
-Build-Depends: debhelper (>= 11)
-Standards-Version: 4.1.3
-Homepage: https://github.com/deepin-community/template-repository
-#Vcs-Browser: https://salsa.debian.org/debian/deepin-community-template-repository
-#Vcs-Git: https://salsa.debian.org/debian/deepin-community-template-repository.git
+Section: net
+Maintainer: Debian Printing Team <debian-printing@lists.debian.org>
+Uploaders: Till Kamppeter <till.kamppeter@gmail.com>
+	, Thorsten Alteholz <debian@alteholz.de>
+Build-Depends: debhelper-compat (=13)
+	, autoconf
+	, pkg-config
+	, sharutils
+	, libglib2.0-dev
+	, libcups2-dev (>= 2.2.2)
+	, libdbus-1-dev
+	, dbus-daemon
+Homepage: https://github.com/OpenPrinting/cpdb-libs
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Vcs-Browser: https://salsa.debian.org/printing-team/cpdb-libs
+Vcs-Git: https://salsa.debian.org/printing-team/cpdb-libs.git
 
-Package: template-repository
+Package: libcpdb2
+Section: libs
 Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Multi-Arch: same
+Description: Common Print Dialog Backends - Interface Library
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, cloud printing services, Save
+ to File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains the library which provides the functions needed
+ by both the frontends and the backends.
+
+Package: libcpdb-frontend2
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcpdb2 (= ${binary:Version})
+Multi-Arch: same
+Description: Common Print Dialog Backends - Interface Library for Frontends
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, Google Cloud Print, Save to
+ File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains the library which provides the functions needed
+ by the frontends (print dialogs).
+
+Package: libcpdb-backend-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcpdb2 (= ${binary:Version}),
+ libcpdb-dev (= ${binary:Version})
+Description: Common Print Dialog Backends - Development files for Backend Library
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, Google Cloud Print, Save to
+ File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains the header files to develop print dialog
+ backends using libcpdb.
+
+Package: libcpdb-frontend-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcpdb-frontend2 (= ${binary:Version}),
+ libcpdb2 (= ${binary:Version}),
+ libcpdb-dev (= ${binary:Version})
+Description: Common Print Dialog Backends - Development files for Frontend Library
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, Google Cloud Print, Save to
+ File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains the header files to develop print dialogs
+ supporting the Common Print Dialog Backends interface using
+ libcpdb-frontend.
+
+Package: libcpdb-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcpdb2 (= ${binary:Version})
+Description: Common Print Dialog Backends - Development files for both libraries
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, Google Cloud Print, Save to
+ File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains the header files to develop print dialog
+ backends and print dialogs using libcpdb.
+
+Package: cpdb-libs-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libcpdb2 (= ${binary:Version})
+Breaks: libcpdb-libs-common-dev (<< 1.2.0-1~),
+	libcpdb-libs-tools (<< 2~)
+Replaces: libcpdb-libs-common-dev (<< 1.2.0-1~),
+	  libcpdb-libs-tools (<< 2~)
+Description: Common Print Dialog Backends - tools
+ The Common Print Dialog Backends project provides a D-Bus interface
+ so that the print dialogs of GUI applications and the communication
+ with the print technologies (CUPS/IPP, Google Cloud Print, Save to
+ File, ...)  are put into separate executables to be separately
+ exchangeable.
+ .
+ The print dialogs of the different GUI toolkits and applications
+ (GTK, Qt, LibreOffice, ...) are the frontends and to communicate with
+ the different print technologies they use common backends. This way
+ one simply adds new backends for new print technologies and updates
+ the backends for changes in the print technologies, and immediately
+ all applications are up-to-date, without need of modifying the code
+ of the GUI toolkits or applications.
+ .
+ This package contains tools to help develop print dialogs supporting
+ the Common Print Dialog Backends interface and print backends using
+ libcpdb and/or libcpdb-frontend.
+
+Package: libcpdb-libs-tools
+Section: oldlibs
+Architecture: all
+Depends: cpdb-libs-tools (>= 2~),
+         ${misc:Depends}
+Description: Common Print Dialog Backends - Tools (transitional package)
+ This is a transitional package and can safely be removed once no other
+ packages depend on it.

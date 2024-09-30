@@ -2,3 +2,32 @@
 
 %:
 	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--disable-silent-rules \
+		--libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
+		--mandir=/usr/share/man \
+		--enable-static
+
+override_dh_installdocs:
+	dh_installdocs -A README.md
+
+override_dh_makeshlibs:
+	dh_makeshlibs -- -c4
+
+override_dh_auto_clean:
+	[ ! -r Makefile ] || make distclean
+
+override_dh_install:
+	dh_install
+
+get-orig-source:
+	set -e;\
+	quilt pop -af || true ;\
+	rm -Rf .pc ;\
+	gbp import-orig --pristine-tar --uscan --no-merge --upstream-branch=upstream/latest;\
+	utag=`git describe --exact-match heads/upstream/latest | sed -e 's#^upstream/##'` ;\
+	ucommit=`git rev-parse --verify upstream/latest`;\
+	git dpm record-new-upstream --rebase-patched --allow-changes-in-debian-branch ../cpdb-libs_$$utag.orig.tar.gz $$ucommit ;\
+	git dpm update-patches -m "Merge upstream-repacked $$utag version and refresh git-dpm patches"

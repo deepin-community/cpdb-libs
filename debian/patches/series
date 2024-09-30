@@ -1,0 +1,8 @@
+manually-hardening.patch
+make-inability-to-create-config-dir-non-fatal.patch
+cpdb-text-frontend-fix-mainloop.patch
+cpdb-connect-to-dbus-fix-crasher-in-waitloop.patch
+cpdb-text-frontend-remove-g-main-loop.patch
+cpdb-activate-backends-fix-g-object-unref-crasher.patch
+cpdb-activate-backends-also-check-for-running-backends.patch
+spelling.patch
