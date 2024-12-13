@@ -1,0 +1,9 @@
+usr/lib/*/libcpdb.so
+usr/lib/*/libcpdb.a
+#unless really needed, this should not be in the package -> dependency_libs
+#usr/lib/*/libcpdb.la
+usr/lib/*/pkgconfig/cpdb.pc
+usr/include/cpdb/cpdb.h
+usr/include/cpdb/backend-interface.h
+usr/include/cpdb/frontend-interface.h
+

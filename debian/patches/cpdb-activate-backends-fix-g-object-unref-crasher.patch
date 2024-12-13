@@ -1,0 +1,18 @@
+Description: fix for Ubuntu package, might become available upstream
+Forwarded: not-needed
+--- a/cpdb/cpdb-frontend.c
++++ b/cpdb/cpdb-frontend.c
+@@ -387,12 +387,12 @@
+             g_hash_table_insert(f->backend, backend_suffix, backend_proxy);
+             f->num_backends++;
+             fetchPrinterListFromBackend(f, backend_suffix);
++	    g_object_unref(backend_proxy);
+         }
+     }
+ 
+     g_variant_unref(service_names);
+     g_variant_unref(service_names_tuple);
+-    g_object_unref(backend_proxy);
+ }
+ 
+ PrintBackend *cpdbCreateBackend(GDBusConnection *connection,

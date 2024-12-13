@@ -1,0 +1,152 @@
+#!/bin/bash
+
+set -e -u
+
+LOG=log.txt
+QUEUE=testprinter_cpdb_libs
+FRONTEND=/usr/bin/cpdb-text-frontend
+FILE_TO_PRINT=/usr/share/cups/data/default-testpage.pdf
+CUPS_SPOOL_DIR=/var/spool/cups
+
+# Create temporary work directory
+WORKDIR=$(mktemp -d)
+cd $WORKDIR
+
+cleanup() {
+    # Remove the log file
+    rm -f $LOG
+    # Remove the temporary directory
+    rm -rf $WORKDIR
+    # Delete the printer
+    lpadmin -x $QUEUE 2>/dev/null || :
+}
+
+trap cleanup 0 EXIT INT QUIT ABRT PIPE TERM
+
+# Create the log file
+rm -f $LOG
+touch $LOG
+
+# Configure the running CUPS server to do debug2 logging
+sed -e 's/^.*LogLevel.*$/LogLevel debug2/g' -i /etc/cups/cupsd.conf
+# Configure the running CUPS server to set FileDevice to Yes
+sed -e 's/^.*FileDevice.*$/FileDevice Yes/g' -i /etc/cups/cups-files.conf
+# Configure the running CUPS server to allow root to do administrative tasks
+sed -e 's/^.*SystemGroup.*$/SystemGroup lpadmin root/g' -i /etc/cups/cups-files.conf
+service cups restart
+
+# Create a test print queue (disabled, but accepting jobs)
+#cupsctl --debug-logging
+lpadmin -p $QUEUE -v file:/dev/null -m drv:///sample.drv/laserjet.ppd -o PageSize=Env10 2>/dev/null
+cupsaccept $QUEUE
+
+# Wait for CUPS to DNS-SD-broadcast the queue
+sleep 5
+
+# Run the demo with a session D-Bus and feed in commands, in parallel
+# do a kill on the demo process after a timeout, for the case that the
+# commands take too long or stopping the demo does not work. Ignore the
+# error of the kill command if the demo gets stopped correctly.
+( \
+  sleep 5; \
+  echo get-all-options $QUEUE CUPS; \
+  sleep 2; \
+  echo print-file $FILE_TO_PRINT $QUEUE CUPS; \
+  sleep 1; \
+  echo stop \
+) | dbus-run-session -- $FRONTEND >> $LOG 2>&1
+
+cat $LOG
+
+echo
+
+# Does the printer appear in the initial list of available printers?
+echo "Initial listing of the printer:"
+if ! grep '^Printer '$QUEUE'$' $LOG; then
+    echo "FAIL: CUPS queue $QUEUE not listed!"
+    exit 1
+fi
+
+echo
+
+# Does the attribute "printer-resolution" appear in the list of options?
+echo "Attribute listing of \"printer-resolution\":"
+if ! grep 'printer-resolution' $LOG; then
+    echo "FAIL: Attribute \"printer-resolution\" not listed!"
+    exit 1
+fi
+
+echo
+
+# Does the attribute "print-quality" appear in the list of options?
+echo "Attribute listing of \"print-quality\":"
+if ! grep 'print-quality' $LOG; then
+    echo "FAIL: Attribute \"print-quality\" not listed!"
+    exit 1
+fi
+
+echo
+
+# Does the setting "na_number-10_4.125x9.5in" appear as a default setting?
+echo "\"na_number-10_4.125x9.5in\" as a default setting:"
+if ! grep 'DEFAULT: *na_number-10_4.125x9.5in' $LOG; then
+    echo "Setting \"na_number-10_4.125x9.5in\" not listed as default!"
+    exit 1
+fi
+
+echo
+
+# Did the successful submission of a print job get confirmed?
+echo "Confirmation message for job submission:"
+if ! grep -i 'Document send succeeded' $LOG; then
+    echo "No confirmation of job submission!"
+    exit 1
+fi
+
+grep '\[Job [0-9]' /var/log/cups/error_log | tail -50
+
+JOBNUM=
+COUNT=1
+echo "Trying to find the job ... "
+while [ -z "$JOBNUM" ]; do
+    # Find the job
+    sleep 5
+    echo "Attempt: $COUNT";
+    echo "Jobs submitted:"
+    lpstat -o $QUEUE
+    echo "Jobs completed:"
+    lpstat -W completed -o
+    echo
+    JOBNUM=`lpstat -o $QUEUE | tail -1 | cut -d ' ' -f 1 | cut -d - -f 2`
+    COUNT=$(( $COUNT + 1 ))
+    if test $COUNT -gt 20; then
+	echo "Job not found!"
+	exit 1
+    fi
+done
+echo "Job number: $JOBNUM"
+if [ -n "$JOBNUM" ]; then
+    SPOOLFILE=`printf "%s/d%05d-001" $CUPS_SPOOL_DIR $JOBNUM`
+    echo "Job spool file: $SPOOLFILE"
+    if [ -f "$SPOOLFILE" ]; then
+	echo "diff $FILE_TO_PRINT $SPOOLFILE"
+	diff -q $FILE_TO_PRINT $SPOOLFILE || ( \
+	    echo "Submitted job data and spooled job data differ!"; \
+	    exit 1; \
+	)
+    else
+	echo "Spool file does not exist!"
+	exit 1
+    fi
+else
+    echo "Job number not found!"
+    exit 1
+fi
+
+echo
+
+echo "SUCCESS: All tests were successful."
+
+echo
+
+exit 0

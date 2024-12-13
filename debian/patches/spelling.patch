@@ -1,0 +1,46 @@
+Description: spelling errors detected by lintian
+Forwarded: not-needed
+Index: cpdb-libs-2.0~b5/cpdb/cpdb-frontend.c
+===================================================================
+--- cpdb-libs-2.0~b5.orig/cpdb/cpdb-frontend.c	2024-02-17 19:00:08.524084390 +0100
++++ cpdb-libs-2.0~b5/cpdb/cpdb-frontend.c	2024-02-17 19:57:05.356406727 +0100
+@@ -1387,7 +1387,7 @@
+ 
+     if (p == NULL || option_name == NULL || locale == NULL)
+     {
+-        logwarn("Invalid paramaters: cpdbGetOptionTranslation()\n");
++        logwarn("Invalid parameters: cpdbGetOptionTranslation()\n");
+         return NULL;
+     }
+ 
+@@ -1434,7 +1434,7 @@
+ 
+     if (p == NULL || option_name == NULL || choice_name == NULL || locale == NULL)
+     {
+-        logwarn("Invalid paramaters: cpdbGetChoiceTranslation()\n");
++        logwarn("Invalid parameters: cpdbGetChoiceTranslation()\n");
+         return NULL;
+     }
+ 
+@@ -1486,7 +1486,7 @@
+ 
+     if (p == NULL || group_name == NULL || locale == NULL)
+     {
+-        logwarn("Invalid paramaters: cpdbGetGroupTranslation()\n");
++        logwarn("Invalid parameters: cpdbGetGroupTranslation()\n");
+         return NULL;
+     }
+ 
+Index: cpdb-libs-2.0~b5/cpdb/cpdb.h
+===================================================================
+--- cpdb-libs-2.0~b5.orig/cpdb/cpdb.h	2023-08-02 22:32:47.000000000 +0200
++++ cpdb-libs-2.0~b5/cpdb/cpdb.h	2024-02-17 19:56:20.260177559 +0100
+@@ -144,7 +144,7 @@
+ #define CPDB_GROUP_COPIES       N_("Copies")
+ #define CPDB_GROUP_COLOR        N_("Color")
+ #define CPDB_GROUP_SCALING      N_("Scaling")
+-#define CPDB_GROUP_QUALITY      N_("Ouput Quality")
++#define CPDB_GROUP_QUALITY      N_("Output Quality")
+ #define CPDB_GROUP_ADVANCED     N_("Advanced")
+ #define CPDB_GROUP_JOB_MGMT     N_("Job Management")
+ #define CPDB_GROUP_PAGE_MGMT    N_("Page Management")
