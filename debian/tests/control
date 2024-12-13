@@ -1,0 +1,9 @@
+Tests: test-frontend-vs-cups-backend
+Restrictions: needs-root, allow-stderr
+Depends: cpdb-libs-tools (>= 2.0~b4),
+         cpdb-backend-cups (>= 2.0~b4),
+         libcupsfilters2-common (>= 2~),
+         cups-client,
+         cups-ppdc,
+         cups,
+         cups-filters (>= 2~),

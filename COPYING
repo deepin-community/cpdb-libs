@@ -5,15 +5,10 @@ Source: https://github.com/OpenPrinting/cpdb-libs/releases
 
 Files: *
 Copyright: 2017, Nilanjana Lodh
- 2017-2023, Till Kamppeter
+ 2017-2022, Till Kamppeter
  2020, Priydarshi Singh
- 2022-2023, Gaurav Guleria
+ 2022, Gaurav Guleria
 License: MIT
-
-Files: debian/*
-Copyright: 2017-2024, Till Kamppeter <till.kamppeter@gmail.com>
-	   2023-2024, Thorsten Alteholz <debian@alteholz.de>
-License: GPL-2+
 
 License: MIT
  The MIT License
@@ -42,12 +37,3 @@ License: MIT
  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  CONNECTION WITH THE SOFTWARE OR THE USE OR
  OTHER DEALINGS IN THE SOFTWARE.
-
-License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 dated June, 1991, or (at
- your option) any later version.
- .
- On Debian systems, the complete text of version 2 of the GNU General
- Public License can be found in '/usr/share/common-licenses/GPL-2'.

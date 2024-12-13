@@ -1,5 +1,31 @@
-template-repository (1.0-1) unstable; urgency=medium
+cpdb-libs (2.0~b5-1) unstable; urgency=medium
 
-  * Initial release
+  * New upstream release.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Thorsten Alteholz <debian@alteholz.de>  Sat, 17 Feb 2024 00:29:17 +0100
+
+cpdb-libs (1.2.0-3) unstable; urgency=medium
+
+  * CVE-2023-34095 (Closes: #1038253)
+    buffer overflow via improper use of scanf()/fscanf()
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Tue, 27 Jun 2023 22:03:02 +0200
+
+cpdb-libs (1.2.0-2) unstable; urgency=medium
+
+  * source upload
+  * move to debian-printing maintenance
+  * debian/tests/control: update dependencies
+  * debian/watch: update for github
+  * debian/control: add special treatment for Ubuntu (Closes: #1028502)
+                    (thanks to Jeremy Bicha for the patch)
+  * debian/control: bump standard to 4.6.2 (no changes)
+  * repository on salsa created (Closes: #1028500)
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Thu, 12 Jan 2023 22:03:02 +0100
+
+cpdb-libs (1.2.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #911335)
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Sun, 08 Jan 2023 19:03:02 +0100

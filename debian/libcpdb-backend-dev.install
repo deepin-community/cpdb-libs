@@ -1,0 +1,2 @@
+usr/lib/*/pkgconfig/cpdb-backend.pc
+usr/include/cpdb/backend.h
